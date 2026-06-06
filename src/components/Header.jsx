@@ -27,7 +27,7 @@ export default function Header({
           <div className="medallion-shine" />
           <div className="w-full h-full rounded-full bg-white/20 backdrop-blur-sm border border-[#FFEAEA]/40 flex items-center justify-center overflow-hidden relative shadow-inner">
             <img 
-              src="/logo.png" 
+              src={`${import.meta.env.BASE_URL}logo.png`} 
               alt="Escudo Sagrado Corazón de Jesús" 
               className="w-11 h-11 md:w-14 md:h-14 object-contain filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.55)] scale-105"
             />
