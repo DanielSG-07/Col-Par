@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { User, GraduationCap, Calendar, Download, Trophy, Sparkles, CheckCircle2, Cpu, Wrench } from "lucide-react";
 import { projects } from "../data/projects";
+import PdfViewer from './PdfViewer';
 
 export default function NuestroProyecto() {
   const [animateCharts, setAnimateCharts] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const modalRef = useRef(null);
 
   // Seleccionar el proyecto principal 
   const project = projects.find((p) => p.id === "proj-1") || projects[0];
@@ -205,19 +208,72 @@ export default function NuestroProyecto() {
               * Documento completo visado bajo normas de propiedad intelectual del Colegio Parroquial.
             </span>
             
-            <a
-              href={project.documentUrl}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#5B0E2D] to-[#290312] border border-[#C29A38]/30 hover:border-[#DFBA6B] text-[#DFBA6B] hover:text-[#FFE79A] text-[10px] font-bold tracking-wider uppercase transition-all duration-300 shadow-md active:scale-98"
-            >
-              <Download className="h-4 w-4" />
-              <span>Ver Tesis Completa en PDF</span>
-            </a>
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#5B0E2D] to-[#290312] border border-[#C29A38]/30 hover:border-[#DFBA6B] text-[#DFBA6B] hover:text-[#FFE79A] text-[10px] font-bold tracking-wider uppercase transition-all duration-300 shadow-md active:scale-98"
+              >
+                <Download className="h-4 w-4" />
+                <span>Ver Tesis Completa en PDF</span>
+              </button>
+              {project.videoURL && project.videoURL !== '#' && (
+                <a
+                  href={project.videoURL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl border border-white/10 text-sm font-bold tracking-wider uppercase hover:bg-white/5"
+                >
+                  Recurso Audiovisual
+                </a>
+              )}
+            </div>
           </div>
 
         </div>
 
       </div>
 
+      {showModal && (
+        <NuestroProyectoPdfModal
+          show={showModal}
+          project={project}
+          modalRef={modalRef}
+          onClose={() => setShowModal(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+// PDF Modal for NuestroProyecto (appended to component file so state/refs available above)
+export function NuestroProyectoPdfModal({ show, project, modalRef, onClose }) {
+  if (!show || !project || !project.documentUrl) return null;
+  return (
+    <div data-modal-open="true" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onContextMenu={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()} onCut={(e) => e.preventDefault()} onPaste={(e) => e.preventDefault()}>
+      <div ref={modalRef} className="relative w-full max-w-5xl h-[85vh] bg-[#290312] border border-[#DFBA6B]/20 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(194,154,56,0.12)]">
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(223,186,107,0.06)_0%,_transparent_55%)] pointer-events-none" />
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(194,154,56,0.04)_0%,_transparent_60%)] pointer-events-none" />
+            <div className="flex items-center justify-between px-5 py-4 gap-4 border-b border-[#DFBA6B]/10 bg-[#2b0710]/90">
+          <div>
+                <p className="text-white text-sm uppercase tracking-[0.2em] font-bold">Documento</p>
+                <p className="text-[#DFBA6B]/80 text-xs mt-1">Visor integrado</p>
+          </div>
+          <button type="button" onClick={onClose} className="text-gray-300 hover:text-white p-2 rounded-full transition-colors" aria-label="Cerrar">
+            Cerrar
+          </button>
+        </div>
+        <div className="relative h-full bg-black select-none" onContextMenu={(e) => e.preventDefault()}>
+          <div className="absolute inset-0 overflow-auto pt-4 p-6" style={{ userSelect: 'none' }}>
+              <div className="max-w-full mx-auto h-full">
+              <PdfViewer src={`${import.meta.env.BASE_URL}${project.documentUrl}`} />
+              </div>
+          </div>
+        </div>
+        <div className="absolute bottom-4 left-4 right-4 text-center text-[11px] text-[#DFBA6B]/70 uppercase tracking-[0.2em]">
+          Selección de texto, copiado y descarga deshabilitados para proteger el contenido del documento. © Colegio Sagrado Corazón de Jesús
+        </div>
+      </div>
     </div>
   );
 }

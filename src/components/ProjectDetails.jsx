@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import PdfViewer from './PdfViewer';
 import { ArrowLeft, Users, Calendar, GraduationCap, Download, ExternalLink, Award, BookOpen, BarChart3 } from "lucide-react";
 
 export default function ProjectDetailPage({ project, onClose }) {
   if (!project) return null;
+
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    if (!showModal) return;
+    const handler = (e) => {
+      const k = (e.key || '').toLowerCase();
+      if ((e.ctrlKey || e.metaKey) && (k === 's' || k === 'p' || k === 'c')) {
+        e.preventDefault();
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [showModal]);
 
   return (
     <div className="w-full flex-1 flex flex-col animate-fade-in text-white/80 select-none overflow-y-auto">
@@ -122,6 +137,30 @@ export default function ProjectDetailPage({ project, onClose }) {
           </div>
         </section>
 
+            {/* ─── Material Audiovisual (Video) ─── */}
+            {project.videoURL && (
+              <motion.section
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="mb-10"
+              >
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-1 h-7 bg-magazine-cyan shadow-[0_0_8px_#00e5ff]" />
+                  <h2 className="text-white text-lg font-bold tracking-[0.15em] uppercase">Material Audiovisual</h2>
+                </div>
+                <div className="relative w-full aspect-video rounded-sm overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(0,229,255,0.05)]">
+                  <iframe
+                    src={project.videoURL}
+                    title={`Video de ${project.title}`}
+                    className="w-full h-full"
+                    allowFullScreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  ></iframe>
+                </div>
+              </motion.section>
+            )}
+
         {/* ─── Resumen ─── */}
         <section className="mb-10">
           <div className="flex items-center gap-3 mb-5">
@@ -219,15 +258,27 @@ export default function ProjectDetailPage({ project, onClose }) {
           </div>
           <div className="flex flex-wrap gap-4">
             {project.documentUrl && project.documentUrl !== '#' ? (
-              <a
-                href={project.documentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 text-[#DFBA6B] border border-[#DFBA6B]/40 px-6 py-3.5 rounded-xl text-sm font-bold tracking-[0.1em] uppercase hover:bg-[#DFBA6B]/10 hover:border-[#DFBA6B] transition-all group"
-              >
-                <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                Documento Principal
-              </a>
+              <>
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="flex items-center gap-3 text-[#DFBA6B] border border-[#DFBA6B]/40 px-6 py-3.5 rounded-xl text-sm font-bold tracking-[0.1em] uppercase hover:bg-[#DFBA6B]/10 hover:border-[#DFBA6B] transition-all group"
+                >
+                  <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                  Documento Principal
+                </button>
+                {project.videoURL && project.videoURL !== '#' && (
+                  <a
+                    href={project.videoURL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 text-gray-300 border border-gray-600 px-6 py-3.5 text-sm font-bold tracking-[0.1em] uppercase hover:bg-white/5 hover:text-white transition-all group"
+                  >
+                    <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
+                    Recurso Audiovisual
+                  </a>
+                )}
+              </>
             ) : (
               <div className="w-full border border-white/[0.04] bg-black/[0.45] rounded-xl p-5 text-center backdrop-blur-sm">
                 <p className="text-white/30 text-sm tracking-wider uppercase font-light">Documentos en proceso de digitalización</p>
@@ -235,6 +286,37 @@ export default function ProjectDetailPage({ project, onClose }) {
             )}
           </div>
         </section>
+
+        {/* PDF Viewer Modal */}
+        {showModal && project.documentUrl && (
+          <div data-modal-open="true" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4" onContextMenu={(e) => e.preventDefault()} onCopy={(e) => e.preventDefault()} onCut={(e) => e.preventDefault()} onPaste={(e) => e.preventDefault()}>
+            <div className="relative w-full max-w-5xl h-[85vh] bg-[#290312] border border-[#DFBA6B]/20 rounded-2xl overflow-hidden shadow-[0_0_40px_rgba(194,154,56,0.12)]">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_rgba(223,186,107,0.06)_0%,_transparent_55%)] pointer-events-none" />
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,_rgba(194,154,56,0.04)_0%,_transparent_60%)] pointer-events-none" />
+              <div className="flex items-center justify-between px-5 py-4 gap-4 border-b border-[#DFBA6B]/10 bg-[#2b0710]/90">
+                <div>
+                  <p className="text-white text-sm uppercase tracking-[0.2em] font-bold">Documento</p>
+                  <p className="text-[#DFBA6B]/80 text-xs mt-1">Visor integrado</p>
+                </div>
+                <button type="button" onClick={() => setShowModal(false)} className="text-gray-300 hover:text-white p-2 rounded-full transition-colors" aria-label="Cerrar">
+                  <ArrowLeft size={20} />
+                </button>
+              </div>
+              <div className="relative h-full bg-black select-none" onContextMenu={(e) => e.preventDefault()}>
+                <div className="absolute inset-0 overflow-auto pt-4 p-6" style={{ userSelect: 'none' }}>
+                  <div className="max-w-full mx-auto h-full">
+                    <PdfViewer src={`${import.meta.env.BASE_URL}${project.documentUrl}`} />
+                  </div>
+                </div>
+              </div>
+              <div className="absolute bottom-4 left-4 right-4 text-center text-[11px] text-[#DFBA6B]/70 uppercase tracking-[0.2em]">
+                Selección de texto, copiado y descarga deshabilitados para proteger el contenido del documento. © Colegio Sagrado Corazón de Jesús
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* keyboard shortcut blocker handled via useEffect above */}
 
         {/* ─── Link de regreso ─── */}
         <div className="mt-14 pt-8 border-t border-white/[0.05] flex justify-center">

@@ -18,6 +18,8 @@ export const projects = [
     year: "2026",
     volume: "Volumen XIV (Actual)",
     category: "Desarrollo Web & Sostenibilidad",
+    documentUrl: "projects/PDFProyecto01.pdf",
+    videoURL: "",
     concept: "sostenible",
     methodology: "Investigación de campo de enfoque cuantitativo apoyada en un diseño no experimental. Se aplicó un instrumento de recolección de datos (cuestionario de 12 preguntas cerradas bajo la Escala de Likert) a una muestra de estudiantes para diagnosticar la necesidad del software, seguido del desarrollo tecnológico de la plataforma web interactiva con almacenamiento en la nube.",
     results: "Validación de la necesidad urgente del portal por parte de la comunidad estudiantil, demostrando que la digitalización elimina por completo los costos de impresión y encuadernación, previene el deterioro físico de las tesis y eleva el prestigio académico del plantel al permitir la incorporación de elementos multimedia (videos, audios y fotos).",
