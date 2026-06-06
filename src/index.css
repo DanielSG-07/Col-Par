@@ -1,0 +1,374 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght=500;700;900&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;800&display=swap');
+@import "tailwindcss";
+
+/* Configuración del viewport para Vite */
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #0b0004;
+}
+
+:root {
+  --font-serif: 'Cinzel', serif; 
+  --font-heading: 'Montserrat', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  /* Paleta Vinotinto Imperial */
+  --color-vinotinto-matte: #290312;
+  --color-vinotinto-glow: #4C0925;
+  --color-vinotinto-card: #3a061b;
+  
+  /* Gradientes de Oro Metálico */
+  --grad-gold-polished: linear-gradient(135deg, #F9F5E8 0%, #DFBA6B 30%, #C29A38 70%, #8C6715 100%);
+  --grad-gold-metalic: linear-gradient(90deg, #8C6715 0%, #C29A38 25%, #DFBA6B 50%, #C29A38 75%, #8C6715 100%);
+  --grad-rose-gold: linear-gradient(135deg, #FFEAEA 0%, #E0A9A9 40%, #B57C7C 80%, #7E4A4A 100%);
+  
+  /* Sombras 3D */
+  --shadow-3d-gold: 0 4px 10px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.4), 0 0 12px rgba(194, 154, 56, 0.3);
+  --shadow-medallion: 0 15px 35px rgba(0,0,0,0.6), inset 0 2px 4px rgba(255,255,255,0.5), 0 0 30px rgba(194,154,56,0.25);
+  --shadow-section-card: 0 20px 45px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1);
+  
+  --transition-ultra: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==========================================================================
+   EFECTO DE FONDO: TÚNEL ESTELAR CINÉTICO (WARP SPEED EFFECT)
+   ========================================================================== */
+
+.bg-neoclassic-tech {
+  background-color: #0b0004;
+  background-image: 
+    radial-gradient(circle at 50% 55%, rgba(41, 3, 18, 0.35) 0%, rgba(5, 0, 2, 0.85) 100%),
+    url('/fondo_new.png');
+  background-position: center 55%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  overflow-x: hidden;
+  z-index: 0;
+}
+
+/* Auroras Cósmicas de fondo */
+.ui-organic-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 55%, rgba(6, 182, 212, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 15% 30%, rgba(6, 182, 212, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 85% 70%, rgba(236, 72, 153, 0.08) 0%, transparent 60%);
+  filter: saturate(120%) contrast(110%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.85;
+}
+
+/* Desactivado para evitar la fatiga visual de las líneas proyectadas, solo se muestran partículas */
+.tech-network {
+  display: none !important;
+}
+
+
+/* ==========================================================================
+   ESTILOS COMPONENTES E INTERFAZ UI 3D Y EFECTOS DE CRISTAL TRANSPARENTE
+   ========================================================================== */
+
+/* VITRINA DE CRISTAL FACETADO TRANSPARENTE EN 3D (CARRUSEL ORIGINAL) */
+.glass-cube-showcase {
+  background: linear-gradient(135deg, rgba(20, 2, 9, 0.85) 0%, rgba(10, 0, 4, 0.95) 100%) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  
+  /* CORRECCIÓN: Forzar el recorte estricto de las esquinas redondeadas */
+  overflow: hidden !important;
+  isolation: isolate; 
+  
+  border: 1.5px solid rgba(194, 154, 56, 0.3) !important;
+  box-shadow: 
+    0 35px 75px rgba(0, 0, 0, 0.85),
+    inset 0 0 40px rgba(255, 255, 255, 0.02),
+    inset 0 0 3px rgba(255, 255, 255, 0.2) !important;
+  position: relative;
+  transform-style: preserve-3d;
+  perspective: 1200px;
+  transition: var(--transition-ultra);
+}
+
+/* Efecto especial para la tarjeta activa del carrusel para darle protagonismo */
+.active-carousel-card .glass-cube-showcase {
+  border: 1.8px solid rgba(223, 186, 107, 0.85) !important;
+  box-shadow: 
+    0 40px 90px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(194, 154, 56, 0.5), /* Resplandor dorado exterior */
+    inset 0 0 30px rgba(194, 154, 56, 0.06) !important;
+}
+
+/* CORRECCIÓN DE BISEL: Asegurar que el sub-borde dorado no se mueva del límite */
+.glass-cube-bevel {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(194, 154, 56, 0.3) !important;
+  border-radius: inherit; /* Hereda exactamente el redondeo del padre */
+  pointer-events: none;
+  z-index: 2;
+  box-sizing: border-box; /* Evita que el grosor del borde lo empuje hacia afuera */
+}
+
+/* Plataforma Base Dorada */
+.gold-platform-base {
+  background: var(--grad-gold-metalic);
+  border-top: 1px solid #DFBA6B; /* Solo arriba para simular el estante */
+  border-bottom: 1px solid #8C6715;
+  box-sizing: border-box; /* Evita que el borde empuje las esquinas hacia afuera */
+  box-shadow: 
+    0 8px 20px rgba(0, 0, 0, 0.65),
+    inset 0 1px 2px rgba(255, 255, 255, 0.35);
+  position: absolute;
+}
+
+/* Grabado de Letras Doradas */
+.engraved-gold-text {
+  background: var(--grad-gold-polished);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: var(--font-serif);
+  letter-spacing: 0.08em;
+  text-shadow: 
+    0px 1px 0px rgba(255, 255, 255, 0.25), 
+    0px -1px 2px rgba(0, 0, 0, 0.9),
+    0px 0px 20px rgba(223, 186, 107, 0.25);
+}
+
+/* Medallón del Escudo */
+.medallion-container {
+  background: radial-gradient(circle, #FFFFFF 0%, #E5E7EB 60%, #9CA3AF 100%);
+  border: 3.5px solid #C29A38;
+  box-shadow: var(--shadow-medallion);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.medallion-gold-ring {
+  position: absolute;
+  inset: 2px;
+  border: 1.5px solid #DFBA6B;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.medallion-shine {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.4) 50%, transparent 55%);
+  animation: shineMedallion 9s infinite ease-in-out;
+  pointer-events: none;
+}
+
+/* Barra de Navegación */
+.top-navbar-pod {
+  background: linear-gradient(180deg, rgba(76, 9, 37, 0.4) 0%, rgba(41, 3, 18, 0.7) 100%);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 2px solid #C29A38;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0px rgba(255,255,255,0.1);
+}
+
+.navbar-section-item {
+  font-family: var(--font-heading);
+  transition: var(--transition-ultra);
+  border-bottom: 2px solid transparent;
+}
+
+.navbar-section-item.active {
+  background: linear-gradient(180deg, rgba(223, 186, 107, 0.05) 0%, rgba(194, 154, 56, 0.15) 100%);
+  border-bottom: 2px solid #DFBA6B;
+  color: #F9F5E8;
+}
+
+/* Tarjetas de Listado */
+.section-grid-card {
+  background-color: var(--color-vinotinto-card);
+  border: 1px solid rgba(194, 154, 56, 0.2);
+  box-shadow: var(--shadow-section-card);
+  border-radius: 12px;
+  transition: var(--transition-ultra);
+}
+
+.section-grid-card:hover {
+  border-color: #DFBA6B;
+  transform: translateY(-4px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 15px rgba(194, 154, 56, 0.15);
+}
+
+/* Botones de Oro Pulido */
+.gold-polished-button {
+  background: var(--grad-gold-polished);
+  border: 1px solid #C29A38;
+  box-shadow: var(--shadow-3d-gold);
+  font-family: var(--font-heading);
+  font-weight: 600;
+  transition: var(--transition-ultra);
+}
+
+.gold-polished-button:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.55), 0 0 25px rgba(194,154,56,0.45);
+}
+
+/* Partículas Estelares */
+.gold-particle {
+  position: absolute;
+  background: radial-gradient(circle, #FFFFFF 0%, rgba(6, 182, 212, 0.85) 40%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 3;
+  animation: warpStarsTravel 6s infinite linear;
+}
+
+/* ==========================================================================
+   ANIMACIONES CINÉTICAS (WARP SPEED TIMINGS)
+   ========================================================================== */
+
+@keyframes starWarpRotation {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.03); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes tunnelPulse {
+  0% { transform: scale(0.97); opacity: 0.6; }
+  100% { transform: scale(1.03); opacity: 1; }
+}
+
+@keyframes shineMedallion {
+  0%, 100% { transform: translate(-40%, -40%); }
+  30% { transform: translate(40%, 40%); }
+}
+
+/* Animación tridimensional de las partículas viajando desde el centro */
+@keyframes warpStarsTravel {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    top: 55%;
+    left: 50%;
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.9;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tw-travel-x, -50%), var(--tw-travel-y, -50%)) scale(2.2);
+    top: var(--tw-end-y, 55%);
+    left: var(--tw-end-x, 50%);
+    opacity: 0;
+  }
+}
+
+/* Scrollbar Personalizada */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-vinotinto-matte);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--grad-gold-polished);
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   CLASES ADICIONALES PARA MEJORA DE CALIDAD VISUAL
+   ========================================================================== */
+
+/* Marcos Metálicos de Oro Rosa */
+.rose-gold-frame {
+  background: var(--grad-rose-gold);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 
+    0 2px 6px rgba(0,0,0,0.4),
+    inset 0 1px 1px rgba(255,255,255,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-ultra);
+}
+
+/* Paneles de Cristal (Glassmorphism Premium) */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.02) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    inset 0 0 20px rgba(255, 255, 255, 0.02) !important;
+  transition: var(--transition-ultra);
+}
+
+.glass-panel:hover {
+  border-color: rgba(194, 154, 56, 0.3) !important;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 18px rgba(194, 154, 56, 0.12),
+    inset 0 0 20px rgba(255, 255, 255, 0.02) !important;
+}
+
+.glass-panel-dark {
+  background: rgba(11, 0, 4, 0.55) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.55),
+    inset 0 0 15px rgba(255, 255, 255, 0.01) !important;
+  transition: var(--transition-ultra);
+}
+
+.glass-panel-dark:hover {
+  border-color: rgba(223, 186, 107, 0.35) !important;
+  box-shadow: 
+    0 25px 45px rgba(0, 0, 0, 0.7),
+    0 0 22px rgba(194, 154, 56, 0.18) !important;
+}
+
+/* Badge Tecnológico Moderno */
+.badge-tech {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Animaciones Fluidas del Sistema */
+.animate-fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-left {
+  animation: slideLeft 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideLeft {
+  from { opacity: 0; transform: translateX(-15px); }
+  to { opacity: 1; transform: translateX(0); }
+}
