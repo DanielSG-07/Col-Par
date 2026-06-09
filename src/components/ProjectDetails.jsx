@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import PdfViewer from './PdfViewer';
 import { ArrowLeft, Users, Calendar, GraduationCap, Download, ExternalLink, Award, BookOpen, BarChart3 } from "lucide-react";
 
@@ -6,6 +7,7 @@ export default function ProjectDetailPage({ project, onClose }) {
   if (!project) return null;
 
   const [showModal, setShowModal] = useState(false);
+  const [showInlineVideo, setShowInlineVideo] = useState(false);
 
   useEffect(() => {
     if (!showModal) return;
@@ -18,6 +20,37 @@ export default function ProjectDetailPage({ project, onClose }) {
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [showModal]);
+
+  const imagePath = project.portada || project.caratula || project.image || "";
+  const imageSrc = imagePath ? `${import.meta.env.BASE_URL}${imagePath}` : "";
+
+  useEffect(() => {
+    setShowInlineVideo(false);
+  }, [project]);
+
+  // Construye un src de embed que active autoplay y reduzca controles (YouTube/Vimeo)
+  const getAutoplaySrc = (url) => {
+    if (!url) return url;
+    try {
+      const u = new URL(url);
+      const host = u.hostname.replace('www.', '');
+      if (host.includes('youtube.com')) {
+        if (u.searchParams.get('v')) {
+          return `https://www.youtube.com/embed/${u.searchParams.get('v')}?autoplay=1&rel=0&controls=0&modestbranding=1&playsinline=1&disablekb=1`;
+        }
+        return url;
+      }
+      if (host.includes('youtu.be')) {
+        const id = u.pathname.replace('/', '');
+        return `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&controls=0&modestbranding=1&playsinline=1&disablekb=1`;
+      }
+      if (host.includes('vimeo.com')) {
+        const id = u.pathname.split('/').pop();
+        return `https://player.vimeo.com/video/${id}?autoplay=1&muted=1&controls=0`;
+      }
+    } catch (e) {}
+    return url;
+  };
 
   return (
     <div className="w-full flex-1 flex flex-col animate-fade-in text-white/80 select-none overflow-y-auto">
@@ -137,30 +170,6 @@ export default function ProjectDetailPage({ project, onClose }) {
           </div>
         </section>
 
-            {/* ─── Material Audiovisual (Video) ─── */}
-            {project.videoURL && (
-              <motion.section
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.4 }}
-                className="mb-10"
-              >
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-1 h-7 bg-magazine-cyan shadow-[0_0_8px_#00e5ff]" />
-                  <h2 className="text-white text-lg font-bold tracking-[0.15em] uppercase">Material Audiovisual</h2>
-                </div>
-                <div className="relative w-full aspect-video rounded-sm overflow-hidden border border-white/10 shadow-[0_0_20px_rgba(0,229,255,0.05)]">
-                  <iframe
-                    src={project.videoURL}
-                    title={`Video de ${project.title}`}
-                    className="w-full h-full"
-                    allowFullScreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  ></iframe>
-                </div>
-              </motion.section>
-            )}
-
         {/* ─── Resumen ─── */}
         <section className="mb-10">
           <div className="flex items-center gap-3 mb-5">
@@ -250,6 +259,53 @@ export default function ProjectDetailPage({ project, onClose }) {
           </div>
         </section>
 
+            {/* ─── Material Audiovisual (Video) ─── */}
+            <motion.section
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              className="mb-10"
+            >
+              <div className="flex items-center gap-3 mb-5">
+                <div className="w-1 h-7 bg-gradient-to-b from-[#DFBA6B] to-[#C29A38] shadow-[0_0_12px_rgba(223,186,107,0.35)]" />
+                <h2 className="text-[#DFBA6B] text-lg font-bold tracking-[0.15em] uppercase">Material Audiovisual</h2>
+              </div>
+              {project.videoURL && project.videoURL !== '#' ? (
+                <div className="relative w-full aspect-video rounded-sm overflow-hidden border border-[#DFBA6B]/10 shadow-[0_0_20px_rgba(223,186,107,0.15)]">
+                  {!showInlineVideo ? (
+                    <div
+                      className="w-full h-full relative cursor-pointer flex items-center justify-center bg-black/20"
+                      onClick={() => setShowInlineVideo(true)}
+                    >
+                      <img
+                        src={imageSrc || project.portada || project.image}
+                        alt={project.title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-85"
+                      />
+                      <div className="absolute inset-0 bg-black/40" />
+                      <button className="relative z-20 flex items-center justify-center w-14 h-14 rounded-full bg-[#DFBA6B]/20 border border-[#DFBA6B]/40 text-[#DFBA6B] shadow-[0_6px_18px_rgba(223,186,107,0.12)]">
+                        <svg viewBox="0 0 24 24" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M5 3v18l15-9"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <iframe
+                      src={getAutoplaySrc(project.videoURL)}
+                      title={`Video de ${project.title}`}
+                      className="w-full h-full"
+                      allow="autoplay; encrypted-media; accelerometer; gyroscope"
+                      sandbox="allow-scripts allow-same-origin"
+                    />
+                  )}
+                </div>
+              ) : (
+                <div className="rounded-2xl border border-white/[0.06] bg-black/30 p-6 text-white/60 text-sm leading-relaxed">
+                  El material audiovisual aún no está disponible para este proyecto.
+                </div>
+              )}
+            </motion.section>
+
         {/* ─── Documentos y Anexos ─── */}
         <section className="mb-10">
           <div className="flex items-center gap-3 mb-5">
@@ -258,27 +314,14 @@ export default function ProjectDetailPage({ project, onClose }) {
           </div>
           <div className="flex flex-wrap gap-4">
             {project.documentUrl && project.documentUrl !== '#' ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="flex items-center gap-3 text-[#DFBA6B] border border-[#DFBA6B]/40 px-6 py-3.5 rounded-xl text-sm font-bold tracking-[0.1em] uppercase hover:bg-[#DFBA6B]/10 hover:border-[#DFBA6B] transition-all group"
-                >
-                  <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                  Documento Principal
-                </button>
-                {project.videoURL && project.videoURL !== '#' && (
-                  <a
-                    href={project.videoURL}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-3 text-gray-300 border border-gray-600 px-6 py-3.5 text-sm font-bold tracking-[0.1em] uppercase hover:bg-white/5 hover:text-white transition-all group"
-                  >
-                    <ExternalLink size={16} className="group-hover:translate-x-1 transition-transform" />
-                    Recurso Audiovisual
-                  </a>
-                )}
-              </>
+              <button
+                type="button"
+                onClick={() => setShowModal(true)}
+                className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#5B0E2D] to-[#290312] border border-[#C29A38]/30 hover:border-[#DFBA6B] text-[#DFBA6B] hover:text-[#FFE79A] text-[10px] font-bold tracking-wider uppercase transition-all duration-300 shadow-md active:scale-98"
+              >
+                <ExternalLink size={16} />
+                Documento Principal
+              </button>
             ) : (
               <div className="w-full border border-white/[0.04] bg-black/[0.45] rounded-xl p-5 text-center backdrop-blur-sm">
                 <p className="text-white/30 text-sm tracking-wider uppercase font-light">Documentos en proceso de digitalización</p>
@@ -303,11 +346,11 @@ export default function ProjectDetailPage({ project, onClose }) {
                 </button>
               </div>
               <div className="relative h-full bg-black select-none" onContextMenu={(e) => e.preventDefault()}>
-                <div className="absolute inset-0 overflow-auto pt-4 p-6" style={{ userSelect: 'none' }}>
-                  <div className="max-w-full mx-auto h-full">
-                    <PdfViewer src={`${import.meta.env.BASE_URL}${project.documentUrl}`} />
+                <div className="absolute inset-0 overflow-auto pt-4 p-6 max-h-[70vh]" style={{ userSelect: 'none' }}>
+                    <div className="max-w-full mx-auto">
+                      <PdfViewer src={`${import.meta.env.BASE_URL}${project.documentUrl}`} />
+                    </div>
                   </div>
-                </div>
               </div>
               <div className="absolute bottom-4 left-4 right-4 text-center text-[11px] text-[#DFBA6B]/70 uppercase tracking-[0.2em]">
                 Selección de texto, copiado y descarga deshabilitados para proteger el contenido del documento. © Colegio Sagrado Corazón de Jesús
