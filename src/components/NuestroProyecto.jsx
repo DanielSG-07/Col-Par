@@ -31,7 +31,7 @@ const AUTHORS_DATA = [
   {
     id: 4,
     name: 'García Gonzales Juan',
-    role: 'Estudiante / Investigadora',
+    role: 'Estudiante / Investigador',
     bio: 'Mi meta no es solo crear cosas que se vean bien, sino que de verdad importen.',
     image: '/projects/juan.png'
   },
