@@ -4,6 +4,7 @@ import Carousel from "./components/Carousel";
 import ProjectDetails from "./components/ProjectDetails";
 import ProjectList from "./components/ProjectList";
 import NuestroProyecto from "./components/NuestroProyecto";
+import VisitorCounter from "./components/VisitorCounter";
 import { projects } from "./data/projects";
 import { Sparkles } from "lucide-react";
 
@@ -230,6 +231,10 @@ export default function App() {
               onClose={handleCloseDetail}
             />
           )}
+
+          <div className="mt-10 flex justify-center">
+            <VisitorCounter />
+          </div>
 
         </main>
       </div>

@@ -1,5 +1,6 @@
 import React from "react";
 import { Search, Compass, BookOpen, Layers } from "lucide-react";
+import VisitorCounter from "./VisitorCounter";
 
 export default function Header({ 
   searchTerms, 
@@ -109,6 +110,11 @@ export default function Header({
             </span>
           </div>
         )}
+      </div>
+
+      {/* Contador minimalista en la esquina derecha (solo en pantallas grandes) */}
+      <div className="hidden xl:flex items-center ml-6">
+        <VisitorCounter variant="inline" />
       </div>
 
     </header>
