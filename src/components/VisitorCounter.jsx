@@ -1,36 +1,45 @@
 import { useEffect, useState } from "react";
 import { Eye, Users } from "lucide-react";
 
-function VisitorCounter({ variant = "card" }) {
-  const [visits, setVisits] = useState(null);
-  const [loading, setLoading] = useState(true);
+function VisitorCounter({ variant = "card", visits: propVisits, loading: propLoading }) {
+  const [localVisits, setLocalVisits] = useState(null);
+  const [localLoading, setLocalLoading] = useState(true);
+
+  const visits = propVisits !== undefined ? propVisits : localVisits;
+  const loading = propLoading !== undefined ? propLoading : localLoading;
 
   useEffect(() => {
+    if (propVisits !== undefined) return;
+
     const isDev = import.meta.env.DEV;
 
     async function fetchCount() {
       try {
         // En desarrollo: solo lee el contador para evitar incrementos falsos por Hot Reloading.
-        // En producción (GitHub Pages): incrementa el contador con la acción 'up'.
+        // En producción: incrementa el contador con la acción 'up'.
         const endpoint = isDev
-          ? "https://api.counterapi.dev/v1/daniel-garcias-team-4475/first-counter-4475"
-          : "https://api.counterapi.dev/v1/daniel-garcias-team-4475/first-counter-4475/up";
+          ? "https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475"
+          : "https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475/up";
 
         const resp = await fetch(endpoint);
         if (!resp.ok) throw new Error("Error en la petición al contador");
         
-        const data = await resp.json();
-        const count = data?.count ?? data?.value ?? null;
-        setVisits(typeof count === 'number' ? count : (parseInt(count, 10) || null));
+        const json = await resp.json();
+        let count = json?.data?.up_count ?? null;
+        if (count !== null && !isDev) {
+          // Sumamos 1 porque la API V2 /up devuelve el valor previo al incremento
+          count = count + 1;
+        }
+        setLocalVisits(count);
       } catch (error) {
         console.error("Error al actualizar el contador:", error);
       } finally {
-        setLoading(false);
+        setLocalLoading(false);
       }
     }
 
     fetchCount();
-  }, []);
+  }, [propVisits]);
   if (loading) {
     if (variant === "inline") {
       return (

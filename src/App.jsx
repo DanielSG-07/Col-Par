@@ -14,6 +14,37 @@ export default function App() {
   const [searchTerms, setSearchTerms] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
   const [particles, setParticles] = useState([]);
+  const [visits, setVisits] = useState(null);
+  const [loadingVisits, setLoadingVisits] = useState(true);
+
+  useEffect(() => {
+    const isDev = import.meta.env.DEV;
+
+    async function fetchGlobalCount() {
+      try {
+        const endpoint = isDev
+          ? "https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475"
+          : "https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475/up";
+
+        const resp = await fetch(endpoint);
+        if (!resp.ok) throw new Error("Error en el contador global");
+        const json = await resp.json();
+        
+        let count = json?.data?.up_count ?? null;
+        if (count !== null && !isDev) {
+          // Sumamos 1 porque la API V2 /up devuelve el valor previo al incremento
+          count = count + 1;
+        }
+        setVisits(count);
+      } catch (error) {
+        console.error("Error al obtener el contador:", error);
+      } finally {
+        setLoadingVisits(false);
+      }
+    }
+
+    fetchGlobalCount();
+  }, []);
 
   const sectionToHash = (section) => {
     switch (section) {
@@ -181,6 +212,8 @@ export default function App() {
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
           totalProjects={filteredProjects.length}
+          visits={visits}
+          loadingVisits={loadingVisits}
         />
 
         <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-16 min-h-[calc(100vh-140px)] flex flex-col">
@@ -233,7 +266,7 @@ export default function App() {
           )}
 
           <div className="mt-10 flex justify-center">
-            <VisitorCounter />
+            <VisitorCounter visits={visits} loading={loadingVisits} />
           </div>
 
         </main>

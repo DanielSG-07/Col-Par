@@ -8,7 +8,9 @@ export default function Header({
   totalProjects, 
   selectedCategory, 
   activeSection,
-  onSectionChange
+  onSectionChange,
+  visits,
+  loadingVisits
 }) {
   const sections = [
     { id: "inicio", label: "Inicio", icon: Compass },
@@ -114,7 +116,7 @@ export default function Header({
 
       {/* Contador minimalista en la esquina derecha (solo en pantallas grandes) */}
       <div className="hidden xl:flex items-center ml-6">
-        <VisitorCounter variant="inline" />
+        <VisitorCounter variant="inline" visits={visits} loading={loadingVisits} />
       </div>
 
     </header>
