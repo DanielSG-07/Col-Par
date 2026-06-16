@@ -22,7 +22,7 @@ export const projects = [
     videoURL: "projects/VideoDefensa01.mp4",
     concept: "sostenible",
     methodology: "Investigación de campo de enfoque cuantitativo apoyada en un diseño no experimental. Se aplicó un instrumento de recolección de datos (cuestionario de 12 preguntas cerradas bajo la Escala de Likert) a una muestra de estudiantes para diagnosticar la necesidad del software, seguido del desarrollo tecnológico de la plataforma web interactiva con almacenamiento en la nube.",
-    results: "Validación de la necesidad urgente del portal por parte de la comunidad estudiantil, demostrando que la digitalización elimina por completo los costos de impresión y encuadernación, previene el deterioro físico de las tesis y eleva el prestigio académico del plantel al permitir la incorporación de elementos multimedia (videos, audios y fotos).",
+    results: "Validación de la necesidad urgente del portal por parte de la comunidad estudiantil, demostrando que la digitalización elimina por completo los costos de impresión y encuadernación, previene el deterioro físico de los proyectos y eleva el prestigio académico del plantel al permitir la incorporación de elementos multimedia (videos, audios y fotos).",
     stats: [
       { name: "Innovación", value: 95 },
       { name: "Viabilidad", value: 92 },
@@ -70,8 +70,8 @@ export const projects = [
     ],
     gallery: [
       { label: "Formulario de Encuesta", value: "Aplicación del instrumento diagnóstico sobre la alternativa sostenible. Consiste en la sistematización digitalizada del cuestionario dicotómico de 15 ítems que evalúa las dimensiones de conocimiento docente e indicadores psicopedagógicos (trazo, color, forma y espacio" },
-      { label: "Repositorio Digital", value: "structura de la base de datos en la nube para el resguardo de saberes. Configuración lógica de almacenamiento que centraliza las tesis, guías y baremos de evaluación del Colegio Sagrado Corazón de Jesús, permitiendo a futuros investigadores y académicos consultar los precedentes científicos y las evidencias recopiladas." },
-      { label: "Interfaz de Usuario", value: "Menús de navegación interactivos para consulta multimedia de antecedentes. Diseño de una plataforma web con menús intuitivos que facilitan la consulta de tesis anteriores, guías pedagógicas y recursos multimedia relacionados con la interpretación del dibujo infantil, promoviendo la continuidad investigativa y el acceso a información relevante para docentes e investigadores." }
+      { label: "Repositorio Digital", value: "structura de la base de datos en la nube para el resguardo de saberes. Configuración lógica de almacenamiento que centraliza los Proyectos, guías y baremos de evaluación del Colegio Sagrado Corazón de Jesús, permitiendo a futuros investigadores y académicos consultar los precedentes científicos y las evidencias recopiladas." },
+      { label: "Interfaz de Usuario", value: "Menús de navegación interactivos para consulta multimedia de antecedentes. Diseño de una plataforma web con menús intuitivos que facilitan los Proyectos anteriores, guías pedagógicas y recursos multimedia relacionados con la interpretación del dibujo infantil, promoviendo la continuidad investigativa y el acceso a información relevante para docentes e investigadores." }
     ]
   },
   {

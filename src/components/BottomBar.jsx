@@ -13,7 +13,7 @@ export default function BottomBar({ bottomNavTab, setBottomNavTab }) {
       id: "historico",
       name: "Repaso Histórico",
       icon: History,
-      desc: "Historial de tesis e investigaciones pasadas"
+      desc: "Historial de Proyectos e investigaciones pasadas"
     },
     {
       id: "destacados",

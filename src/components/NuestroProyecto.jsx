@@ -378,7 +378,7 @@ export default function NuestroProyecto() {
             )}
           </div>
 
-          {/* Barra de Descarga de Tesis Completa */}
+          {/* Barra de Descarga de Proyectos Completa */}
           <div className="glass-panel border border-[#C29A38]/20 rounded-2xl p-4 flex flex-col sm:flex-row items-center sm:justify-between gap-4 bg-[rgba(194,154,56,0.02)]">
             <span className="text-[9.5px] text-white/35 font-light text-center sm:text-left leading-relaxed">
               * Documento completo visado bajo normas de propiedad intelectual del Colegio Parroquial.
@@ -390,7 +390,7 @@ export default function NuestroProyecto() {
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#5B0E2D] to-[#290312] border border-[#C29A38]/30 hover:border-[#DFBA6B] text-[#DFBA6B] hover:text-[#FFE79A] text-[10px] font-bold tracking-wider uppercase transition-all duration-300 shadow-md active:scale-98"
             >
               <Download className="h-4 w-4" />
-              <span>Ver Tesis Completa en PDF</span>
+              <span>Ver Trabajo Completo en PDF</span>
             </button>
           </div>
 

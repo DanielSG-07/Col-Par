@@ -38,7 +38,7 @@ jobs:
           echo "Fetching counter..."
           mkdir -p public
           curl -s -H "Authorization: Bearer $API_KEY" \
-            https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475 \
+            https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475/up \
             -o public/counter.json
           echo "Saved to public/counter.json"
           cp public/counter.json dist/counter.json
