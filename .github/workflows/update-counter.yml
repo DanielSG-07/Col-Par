@@ -3,7 +3,7 @@ name: Update counter JSON
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/15 * * * *' # cada 15 minutos
+    - cron: '*/2 * * * *' # cada 2 minutos
 
 permissions:
   contents: write
