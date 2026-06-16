@@ -3,14 +3,24 @@ name: Update counter JSON
 on:
   workflow_dispatch:
   schedule:
-    - cron: '*/3 * * * *' # cada 15 minutos
+    - cron: '*/15 * * * *' # cada 15 minutos
+
+# Grant write permission so the workflow can commit back the generated file
+permissions:
+  contents: write
 
 jobs:
   fetch-counter:
     runs-on: ubuntu-latest
+    # Opt into Node.js 24 for JavaScript actions to avoid deprecation warnings
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 0
 
       - name: Fetch counter from API
         env:
@@ -24,6 +34,8 @@ jobs:
           echo "Saved to public/counter.json"
 
       - name: Commit and push counter.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -32,5 +44,6 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "chore: update counter.json [skip ci]"
+            # Push using the checked-out credentials (persist-credentials: true)
             git push
           fi
