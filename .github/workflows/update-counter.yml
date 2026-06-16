@@ -5,22 +5,31 @@ on:
   schedule:
     - cron: '*/15 * * * *' # cada 15 minutos
 
-# Grant write permission so the workflow can commit back the generated file
 permissions:
   contents: write
 
 jobs:
   fetch-counter:
     runs-on: ubuntu-latest
-    # Opt into Node.js 24 for JavaScript actions to avoid deprecation warnings
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
           fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
 
       - name: Fetch counter from API
         env:
@@ -32,10 +41,11 @@ jobs:
             https://api.counterapi.dev/v2/daniel-garcias-team-4475/first-counter-4475 \
             -o public/counter.json
           echo "Saved to public/counter.json"
+          cp public/counter.json dist/counter.json
 
-      - name: Deploy `public` to gh-pages
+      - name: Deploy dist to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./dist
           publish_branch: gh-pages
